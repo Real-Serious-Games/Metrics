@@ -7,9 +7,11 @@ namespace RSG
 {
     public class Metrics
     {
+        private IMetricsEmitter emitter; 
+
         public Metrics(IMetricsEmitter emitter)
         {
-            //TODO
+            this.emitter = emitter;
         }
 
         /// <summary>
@@ -17,7 +19,14 @@ namespace RSG
         /// </summary>
         public void Entry(string name, string content)
         {
-            //TODO
+            // Set up the metric object
+            var metric = new {
+                name = name,
+                content = content
+            };
+
+            // Emit the entry using our emitter
+            emitter.Emit(new Dictionary<string, string>(), new object[] { metric });
         }
     }
 }
