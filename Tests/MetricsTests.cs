@@ -28,7 +28,7 @@ namespace RSG.MetricsTests
             testObject.Entry("TestEntry", "Testing");
 
             mockMetricsEmitter
-                .Verify(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<IMetric[]>()), Times.Once());
+                .Verify(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
         }
 
         [Fact]
@@ -41,9 +41,9 @@ namespace RSG.MetricsTests
             string emittedEntryName = String.Empty;
 
             mockMetricsEmitter
-                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<IMetric[]>()))
-                .Callback<Dictionary<string, string>, IMetric[]>((properties, metrics) => {
-                    var entry = (Metric<string>) metrics[0];
+                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<Dictionary<string, string>, Metric[]>((properties, metrics) => {
+                    var entry = metrics[0];
                     emittedEntryName = entry.Name;
                 });
 
@@ -59,18 +59,18 @@ namespace RSG.MetricsTests
 
             const string content = "Test content";
 
-            string emittedContent = String.Empty;
+            string emittedData = String.Empty;
 
             mockMetricsEmitter
-                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<IMetric[]>()))
-                .Callback<Dictionary<string, string>, IMetric[]>((properties, metrics) => {
-                    var entry = (Metric<string>) metrics[0];
-                    emittedContent = entry.Content;
+                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<Dictionary<string, string>, Metric[]>((properties, metrics) => {
+                    var entry = metrics[0];
+                    emittedData = entry.Data;
                 });
 
             testObject.Entry("TestEntry", content);
 
-            Assert.Equal(content, emittedContent);
+            Assert.Equal(content, emittedData);
         }
 
         [Fact]

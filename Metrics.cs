@@ -5,6 +5,9 @@ using System.Text;
 
 namespace RSG
 {
+    /// <summary>
+    /// Class for collecting and emitting metrics messages through an IMetricsEmitter.
+    /// </summary>
     public class Metrics
     {
         private IMetricsEmitter emitter; 
@@ -20,12 +23,12 @@ namespace RSG
         public void Entry(string name, string content)
         {
             // Set up the metric object
-            var metric = new Metric<string>();
+            var metric = new Metric();
             metric.Name = name;
-            metric.Content = content;
+            metric.Data = content;
 
             // Emit the entry using our emitter
-            emitter.Emit(new Dictionary<string, string>(), new IMetric[] { metric });
+            emitter.Emit(new Dictionary<string, string>(), new Metric[] { metric });
         }
 
         /// <summary>
