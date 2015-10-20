@@ -20,13 +20,12 @@ namespace RSG
         public void Entry(string name, string content)
         {
             // Set up the metric object
-            var metric = new {
-                name = name,
-                content = content
-            };
+            var metric = new Metric<string>();
+            metric.Name = name;
+            metric.Content = content;
 
             // Emit the entry using our emitter
-            emitter.Emit(new Dictionary<string, string>(), new object[] { metric });
+            emitter.Emit(new Dictionary<string, string>(), new IMetric[] { metric });
         }
 
         /// <summary>

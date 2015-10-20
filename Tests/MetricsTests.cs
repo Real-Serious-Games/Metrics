@@ -28,7 +28,7 @@ namespace RSG.MetricsTests
             testObject.Entry("TestEntry", "Testing");
 
             mockMetricsEmitter
-                .Verify(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<object[]>()), Times.Once());
+                .Verify(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<IMetric[]>()), Times.Once());
         }
 
         [Fact]
