@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metrics", "Metrics.csproj", "{997EFB07-48C0-4DF2-B9FA-2D9457BE5DD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metrics.Tests", "Tests\Metrics.Tests.csproj", "{3C70EA8E-4AD0-4F4F-A689-C8D0B4F60ACD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{997EFB07-48C0-4DF2-B9FA-2D9457BE5DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{997EFB07-48C0-4DF2-B9FA-2D9457BE5DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{997EFB07-48C0-4DF2-B9FA-2D9457BE5DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{997EFB07-48C0-4DF2-B9FA-2D9457BE5DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C70EA8E-4AD0-4F4F-A689-C8D0B4F60ACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C70EA8E-4AD0-4F4F-A689-C8D0B4F60ACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C70EA8E-4AD0-4F4F-A689-C8D0B4F60ACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C70EA8E-4AD0-4F4F-A689-C8D0B4F60ACD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
