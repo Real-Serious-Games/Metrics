@@ -38,12 +38,18 @@ namespace RSG.MetricsTests
 
             var name = "TestEntry";
 
-            /*mockMetricsEmitter
-                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<object[]>()))
-                .Callback<Dictionary<string, string>, object[]>((properties, metrics) => {
+            string emittedEntryName = String.Empty;
 
-                })*/
-            throw new NotImplementedException();
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<IMetric[]>()))
+                .Callback<Dictionary<string, string>, IMetric[]>((properties, metrics) => {
+                    var entry = (Metric<string>) metrics[0];
+                    emittedEntryName = entry.Name;
+                });
+
+            testObject.Entry(name, "Test content");
+
+            Assert.Equal(name, emittedEntryName);
         }
 
         [Fact]

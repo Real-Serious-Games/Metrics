@@ -7,6 +7,6 @@ namespace RSG
 {
     public interface IMetricsEmitter
     {
-        void Emit(Dictionary<string, string> properties, object[] metrics); 
+        void Emit(Dictionary<string, string> properties, IMetric[] metrics); 
     }
 }
