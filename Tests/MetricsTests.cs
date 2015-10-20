@@ -36,7 +36,7 @@ namespace RSG.MetricsTests
         {
             Init();
 
-            var name = "TestEntry";
+            const string name = "TestEntry";
 
             string emittedEntryName = String.Empty;
 
@@ -55,7 +55,22 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_string_contains_string()
         {
-            throw new NotImplementedException();
+            Init();
+
+            const string content = "Test content";
+
+            string emittedContent = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<IMetric[]>()))
+                .Callback<Dictionary<string, string>, IMetric[]>((properties, metrics) => {
+                    var entry = (Metric<string>) metrics[0];
+                    emittedContent = entry.Content;
+                });
+
+            testObject.Entry("TestEntry", content);
+
+            Assert.Equal(content, emittedContent);
         }
 
         [Fact]
