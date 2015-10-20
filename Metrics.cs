@@ -28,5 +28,21 @@ namespace RSG
             // Emit the entry using our emitter
             emitter.Emit(new Dictionary<string, string>(), new object[] { metric });
         }
+
+        /// <summary>
+        /// Set a property for all subsequent messages.
+        /// </summary>
+        public void SetProperty(string name, string property)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Finds the specified property and stops including it in subsequent messages.
+        /// </summary>
+        public void RemoveProperty(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
