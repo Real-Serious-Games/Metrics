@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMetricsEmitter.cs" />
+    <Compile Include="Metric.cs" />
     <Compile Include="Metrics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -7,5 +7,17 @@ namespace RSG
 {
     public class Metrics
     {
+        public Metrics(IMetricsEmitter emitter)
+        {
+            //TODO
+        }
+
+        /// <summary>
+        /// Add a metrics entry string.
+        /// </summary>
+        public void Entry(string name, string content)
+        {
+            //TODO
+        }
     }
 }

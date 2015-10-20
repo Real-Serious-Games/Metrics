@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,23 @@ namespace RSG.MetricsTests
     {
         Metrics testObject;
 
-        [Fact]
-        public void entry_emits_message()
+        Mock<IMetricsEmitter> mockMetricsEmitter;
+
+        void Init()
         {
-            Assert.Equal(true, true);
+            mockMetricsEmitter = new Mock<IMetricsEmitter>();
+
+            testObject = new Metrics(mockMetricsEmitter.Object);
+        }
+
+        [Fact]
+        public void entry_with_string_emits_message()
+        {
+            Init();
+
+            testObject.Entry("TestEntry", "Testing");
+
+            mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
         }
     }
 }

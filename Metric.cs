@@ -5,8 +5,10 @@ using System.Text;
 
 namespace RSG
 {
-    public interface IMetricsEmitter
+    public struct Metric
     {
-        void Emit(Dictionary<string, string> properties, Metric[] metrics); 
+        string name;
+        DateTime timeStamp;
+        string type;
     }
 }
