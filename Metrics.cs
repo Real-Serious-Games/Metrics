@@ -19,6 +19,7 @@ namespace RSG
         public static readonly string intTypeName = typeof(int).Name;
         public static readonly string floatTypeName = typeof(float).Name;
         public static readonly string incTypeName = "inc";
+        public static readonly string eventTypeName = "event";
 
         public Metrics(IMetricsEmitter emitter)
         {
@@ -90,7 +91,12 @@ namespace RSG
         {
             Argument.StringNotNullOrEmpty(() => name);
 
-            var metric = new Metric();
+            var metric = new Metric()
+            {
+                Name = name,
+                Type = eventTypeName,
+                TimeStamp = DateTime.Now
+            };
 
             emitter.Emit(properties, new Metric[] { metric });
         }

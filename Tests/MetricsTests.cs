@@ -447,8 +447,6 @@ namespace RSG.MetricsTests
         {
             Init();
 
-            const string type = "event";
-
             var emittedType = String.Empty;
 
             mockMetricsEmitter
@@ -461,7 +459,7 @@ namespace RSG.MetricsTests
 
             testObject.Event("TestEvent");
 
-            Assert.Equal(type, emittedType);
+            Assert.Equal(Metrics.eventTypeName, emittedType);
         }
         
         [Fact]
