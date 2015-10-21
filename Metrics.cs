@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RSG.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,8 @@ namespace RSG
 
         public Metrics(IMetricsEmitter emitter)
         {
+            Argument.NotNull(() => emitter);
+
             this.emitter = emitter;
 
             properties = new Dictionary<string, string>();
@@ -31,6 +34,9 @@ namespace RSG
         /// </summary>
         public void Entry(string name, string data)
         {
+            Argument.StringNotNullOrEmpty(() => name);
+            Argument.StringNotNullOrEmpty(() => data);
+
             // Set up the metric object
             var metric = new Metric();
             metric.Name = name;
@@ -63,6 +69,8 @@ namespace RSG
         /// </summary>
         public void Inc(string name)
         {
+            Argument.StringNotNullOrEmpty(() => name);
+
             var metric = new Metric();
             metric.Name = name;
             metric.Type = incTypeName;
@@ -84,6 +92,9 @@ namespace RSG
         /// </summary>
         public void SetProperty(string name, string property)
         {
+            Argument.StringNotNullOrEmpty(() => name);
+            Argument.StringNotNullOrEmpty(() => property);
+            
             if (properties.ContainsKey(name))
             {
                 properties[name] = property;
@@ -99,6 +110,8 @@ namespace RSG
         /// </summary>
         public void RemoveProperty(string name)
         {
+            Argument.StringNotNullOrEmpty(() => name);
+
             if (properties.ContainsKey(name))
             {
                 properties.Remove(name);
