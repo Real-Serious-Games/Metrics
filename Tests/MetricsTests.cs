@@ -287,5 +287,49 @@ namespace RSG.MetricsTests
 
             Assert.Throws<ApplicationException>(() => testObject.RemoveProperty("undefined property"));
         }
+
+        [Fact]
+        public void inc_emits_name()
+        {
+            Init();
+
+            const string name = "Increment";
+
+            var emittedName = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedName = entry.Name;
+                });
+
+            testObject.Inc(name);
+
+            Assert.Equal(name, emittedName);
+        }
+
+        [Fact]
+        public void inc_emits_correct_type()
+        {
+            Init();
+
+            const string type = "inc";
+
+            var emittedType = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedType = entry.Type;
+                });
+
+            testObject.Inc("counter");
+
+            Assert.Equal(type, emittedType);
+        }
     }
 }

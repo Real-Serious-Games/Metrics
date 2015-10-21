@@ -15,6 +15,9 @@ namespace RSG
         private IDictionary<string, string> properties;
 
         private static readonly string stringTypeName = typeof(string).Name;
+        private static readonly string intTypeName = typeof(int).Name;
+        private static readonly string floatTypeName = typeof(float).Name;
+        private static readonly string incTypeName = "inc";
 
         public Metrics(IMetricsEmitter emitter)
         {
@@ -56,13 +59,20 @@ namespace RSG
         }
 
         /// <summary>
-        /// Increments the specified value.
+        /// Sends an increment metric to the emitter.
         /// </summary>
-        public void Inc(string inc)
+        public void Inc(string name)
         {
-            throw new NotImplementedException();
+            var metric = new Metric();
+            metric.Name = name;
+            metric.Type = incTypeName;
+
+            emitter.Emit(properties, new Metric[] { metric });
         }
 
+        /// <summary>
+        /// Sends an event metric to the emitter.
+        /// </summary>
         public void Event(string name)
         {
             throw new NotImplementedException();
