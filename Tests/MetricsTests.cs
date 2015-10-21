@@ -218,7 +218,28 @@ namespace RSG.MetricsTests
         [Fact]
         public void remove_property_stops_including_properties_on_messages()
         {
-            throw new NotImplementedException();
+            Init();
+
+            testObject.SetProperty("key1", "value");
+            testObject.SetProperty("key2", "value");
+            testObject.RemoveProperty("key1");
+
+            testObject.Entry("TestEntry", "data");
+
+            var properties = new Dictionary<string, string>();
+            properties.Add("key2", "value");
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.IsAny<Metric[]>()));
+        }
+
+        [Fact]
+        public void remove_property_on_invalid_property_throws_exception()
+        {
+            Init();
+
+            Assert.Throws<ApplicationException>(() => testObject.RemoveProperty("undefined property"));
         }
     }
 }

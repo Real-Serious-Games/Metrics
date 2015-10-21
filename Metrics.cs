@@ -55,7 +55,14 @@ namespace RSG
         /// </summary>
         public void RemoveProperty(string name)
         {
-            throw new NotImplementedException();
+            if (properties.ContainsKey(name))
+            {
+                properties.Remove(name);
+            }
+            else
+            {
+                throw new ApplicationException("Tried to remove a non-existent property from metrics.");
+            }
         }
     }
 }
