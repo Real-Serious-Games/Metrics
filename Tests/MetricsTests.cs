@@ -250,6 +250,104 @@ namespace RSG.MetricsTests
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
 
+        [Fact]
+        public void entry_with_float_emits_message()
+        {
+            Init();
+
+            testObject.Entry("TestEntry", 99.5f);
+
+            mockMetricsEmitter
+                .Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+        }
+
+        [Fact]
+        public void entry_with_float_contains_entry_name()
+        {
+            Init();
+
+            const string name = "TestEntry";
+
+            string emittedEntryName = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                {
+                    var entry = metrics[0];
+                    emittedEntryName = entry.Name;
+                });
+
+            testObject.Entry(name, 99.1f);
+
+            Assert.Equal(name, emittedEntryName);
+        }
+
+        [Fact]
+        public void entry_with_float_contains_int()
+        {
+            Init();
+
+            const float content = 12.41f;
+
+            string emittedData = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                {
+                    var entry = metrics[0];
+                    emittedData = entry.Data;
+                });
+
+            testObject.Entry("TestEntry", content);
+
+            Assert.Equal(content.ToString(), emittedData);
+        }
+
+        [Fact]
+        public void entry_with_float_has_correct_type()
+        {
+            Init();
+
+            string emittedType = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedType = entry.Type;
+                });
+
+            testObject.Entry("TestEntry", 64.1235f);
+
+            Assert.Equal(Metrics.floatTypeName, emittedType);
+        }
+
+        [Fact]
+        public void entry_with_float_has_correct_timestamp()
+        {
+            Init();
+
+            var timeStamp = DateTime.MinValue;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    timeStamp = entry.TimeStamp;
+                });
+
+            var timeBefore = DateTime.Now;
+
+            testObject.Entry("TestEntry", 64.123f);
+
+            var timeAfter = DateTime.Now;
+
+            Assert.InRange(timeStamp, timeBefore, timeAfter);
+        }
 
         [Fact]
         public void no_properties_are_included_by_default()

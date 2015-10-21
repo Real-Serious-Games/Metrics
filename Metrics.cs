@@ -74,7 +74,17 @@ namespace RSG
         /// </summary>
         public void Entry(string name, float data)
         {
-            throw new NotImplementedException();
+            Argument.StringNotNullOrEmpty(() => name);
+
+            var metric = new Metric()
+            {
+                Name = name,
+                Data = data.ToString(),
+                Type = floatTypeName,
+                TimeStamp = DateTime.Now
+            };
+
+            emitter.Emit(properties, new Metric[] { metric });
         }
 
         /// <summary>
