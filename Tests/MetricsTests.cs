@@ -185,7 +185,34 @@ namespace RSG.MetricsTests
         [Fact]
         public void set_property_appends_to_included_properties()
         {
-            throw new NotImplementedException();
+            Init();
+
+            const string propertyKey1 = "firstKey";
+            const string propertyKey2 = "secondKey";
+            const string propertyValue1 = "value";
+            const string propertyValue2 = "something else";
+
+            testObject.SetProperty(propertyKey1, propertyValue1);
+
+            testObject.Entry("TestEntry1", "data");
+
+            var properties = new Dictionary<string, string>();
+            properties.Add(propertyKey1, propertyValue1);
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.IsAny<Metric[]>()),
+                    Times.Once());
+
+            testObject.SetProperty(propertyKey2, propertyValue2);
+
+            testObject.Entry("TestEntry2", "data");
+
+            properties.Add(propertyKey2, propertyValue2);
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.IsAny<Metric[]>()));
         }
 
         [Fact]
