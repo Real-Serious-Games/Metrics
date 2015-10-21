@@ -179,8 +179,7 @@ namespace RSG.MetricsTests
             mockMetricsEmitter
                 .Verify(m => m.Emit(
                     It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties2, p)),
-                    It.IsAny<Metric[]>()),
-                    Times.Once());
+                    It.IsAny<Metric[]>()));
         }
 
         [Fact]
