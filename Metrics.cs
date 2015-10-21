@@ -40,7 +40,14 @@ namespace RSG
         /// </summary>
         public void SetProperty(string name, string property)
         {
-            properties.Add(name, property);
+            if (properties.ContainsKey(name))
+            {
+                properties[name] = property;
+            }
+            else
+            {
+                properties.Add(name, property);
+            }
         }
 
         /// <summary>

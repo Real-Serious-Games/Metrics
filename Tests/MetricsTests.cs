@@ -122,29 +122,69 @@ namespace RSG.MetricsTests
             mockMetricsEmitter
                 .Verify(m => m.Emit(
                     It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
-                    It.IsAny<Metric[]>()));
-        }
-
-        [Fact]
-        public void set_property_sets_property_string()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public void set_property_sets_property_name()
-        {
-            throw new NotImplementedException();
+                    It.IsAny<Metric[]>()),
+                    Times.Once());
         }
 
         [Fact]
         public void set_property_includes_property_on_subsequent_messages()
         {
-            throw new NotImplementedException();
+            Init();
+
+            const string propertyKey = "key";
+            const string propertyValue = "value";
+
+            testObject.SetProperty(propertyKey, propertyValue);
+
+            testObject.Entry("TestEntry1", "data");
+            testObject.Entry("TestEntry2", "data");
+            testObject.Entry("TestEntry3", "data");
+
+            var properties = new Dictionary<string, string>();
+            properties.Add(propertyKey, propertyValue);
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.IsAny<Metric[]>()),
+                    Times.Exactly(3));
         }
 
         [Fact]
         public void set_property_updates_existing_property()
+        {
+            Init();
+
+            const string propertyKey = "key";
+            const string propertyValue1 = "value";
+            const string propertyValue2 = "something else";
+
+            testObject.SetProperty(propertyKey, propertyValue1);
+
+            testObject.Entry("TestEntry1", "data");
+
+            var properties1 = new Dictionary<string, string>();
+            properties1.Add(propertyKey, propertyValue1);
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties1, p)),
+                    It.IsAny<Metric[]>()),
+                    Times.Once());
+
+            testObject.SetProperty(propertyKey, propertyValue2);
+
+            testObject.Entry("TestEntry2", "data");
+
+            var properties2 = new Dictionary<string, string>();
+            properties2.Add(propertyKey, propertyValue2);
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties2, p)),
+                    It.IsAny<Metric[]>()),
+                    Times.Once());
+        }
+
+        [Fact]
+        public void set_property_appends_to_included_properties()
         {
             throw new NotImplementedException();
         }
