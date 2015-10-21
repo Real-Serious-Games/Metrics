@@ -10,11 +10,15 @@ namespace RSG
     /// </summary>
     public class Metrics
     {
-        private IMetricsEmitter emitter; 
+        private IMetricsEmitter emitter;
+
+        private IDictionary<string, string> properties;
 
         public Metrics(IMetricsEmitter emitter)
         {
             this.emitter = emitter;
+
+            properties = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace RSG
             metric.Data = content;
 
             // Emit the entry using our emitter
-            emitter.Emit(new Dictionary<string, string>(), new Metric[] { metric });
+            emitter.Emit(properties, new Metric[] { metric });
         }
 
         /// <summary>
@@ -36,7 +40,7 @@ namespace RSG
         /// </summary>
         public void SetProperty(string name, string property)
         {
-            throw new NotImplementedException();
+            properties.Add(name, property);
         }
 
         /// <summary>

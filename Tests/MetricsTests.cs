@@ -20,6 +20,38 @@ namespace RSG.MetricsTests
             testObject = new Metrics(mockMetricsEmitter.Object);
         }
 
+        /// <summary>
+        /// Helper function to check if two dictionaries are the same.
+        /// </summary>
+        bool DictionaryEquals<TKey, TValue>(IDictionary<TKey, TValue> expected, IDictionary<TKey, TValue> actual)
+        {
+            // Check that the two dictionaries are the same length.
+            if (expected.Count != actual.Count)
+            {
+                return false;
+            }
+
+            // Check that each element is the same.
+            foreach (var pair in expected)
+            {
+                TValue value;
+                if (actual.TryGetValue(pair.Key, out value))
+                {
+                    // Check that each value is the same
+                    if (!value.Equals(pair.Value))
+                    {
+                        return false;
+                    }
+                }
+                else // Require key to be present.
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         [Fact]
         public void entry_with_string_emits_message()
         {
@@ -76,7 +108,21 @@ namespace RSG.MetricsTests
         [Fact]
         public void set_property_includes_property_on_first_message()
         {
-            throw new NotImplementedException();
+            Init();
+
+            const string propertyKey = "key";
+            const string propertyValue = "value";
+
+            testObject.SetProperty(propertyKey, propertyValue);
+
+            testObject.Entry("TestEntry", "data");
+
+            var properties = new Dictionary<string, string>();
+            properties.Add(propertyKey, propertyValue);
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.IsAny<Metric[]>()));
         }
 
         [Fact]
