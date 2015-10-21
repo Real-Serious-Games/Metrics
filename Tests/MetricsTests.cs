@@ -289,6 +289,39 @@ namespace RSG.MetricsTests
         }
 
         [Fact]
+        public void inc_emits_metric()
+        {
+            Init();
+
+            testObject.Inc("counter");
+
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()),
+                    Times.Once());
+        }
+
+        [Fact]
+        public void inc_contains_all_properties()
+        {
+            Init();
+
+            testObject.SetProperty("Property1", "foo");
+            testObject.SetProperty("Property2", "bar");
+
+            testObject.Inc("counter");
+
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add("Property1", "foo");
+            expectedProperties.Add("Property2", "bar");
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
+                    It.IsAny<Metric[]>()),
+                    Times.Once());
+        }
+
+        [Fact]
         public void inc_emits_name()
         {
             Init();
