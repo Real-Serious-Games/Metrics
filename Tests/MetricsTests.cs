@@ -388,5 +388,106 @@ namespace RSG.MetricsTests
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
+
+        [Fact]
+        public void event_emits_metric()
+        {
+            Init();
+
+            testObject.Inc("counter");
+
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()),
+                    Times.Once());
+        }
+
+        [Fact]
+        public void event_contains_all_properties()
+        {
+            Init();
+
+            testObject.SetProperty("Property1", "foo");
+            testObject.SetProperty("Property2", "bar");
+
+            testObject.Inc("counter");
+
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add("Property1", "foo");
+            expectedProperties.Add("Property2", "bar");
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
+                    It.IsAny<Metric[]>()),
+                    Times.Once());
+        }
+
+        [Fact]
+        public void event_emits_name()
+        {
+            Init();
+
+            const string name = "event";
+
+            var emittedName = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedName = entry.Name;
+                });
+
+            testObject.Event(name);
+
+            Assert.Equal(name, emittedName);
+        }
+
+        [Fact]
+        public void event_emits_correct_type()
+        {
+            Init();
+
+            const string type = "event";
+
+            var emittedType = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedType = entry.Type;
+                });
+
+            testObject.Event("TestEvent");
+
+            Assert.Equal(type, emittedType);
+        }
+        
+        [Fact]
+        public void event_emits_correct_timestamp()
+        {
+            Init();
+
+            var timeStamp = DateTime.MinValue;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    timeStamp = entry.TimeStamp;
+                });
+
+            var timeBefore = DateTime.Now;
+
+            testObject.Event("TestEvent");
+
+            var timeAfter = DateTime.Now;
+
+            Assert.InRange(timeStamp, timeBefore, timeAfter);
+        }
     }
 }
