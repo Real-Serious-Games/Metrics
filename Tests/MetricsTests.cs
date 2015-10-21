@@ -28,7 +28,7 @@ namespace RSG.MetricsTests
             testObject.Entry("TestEntry", "Testing");
 
             mockMetricsEmitter
-                .Verify(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+                .Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
         }
 
         [Fact]
@@ -41,8 +41,8 @@ namespace RSG.MetricsTests
             string emittedEntryName = String.Empty;
 
             mockMetricsEmitter
-                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<Dictionary<string, string>, Metric[]>((properties, metrics) => {
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => {
                     var entry = metrics[0];
                     emittedEntryName = entry.Name;
                 });
@@ -62,8 +62,8 @@ namespace RSG.MetricsTests
             string emittedData = String.Empty;
 
             mockMetricsEmitter
-                .Setup(m => m.Emit(It.IsAny<Dictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<Dictionary<string, string>, Metric[]>((properties, metrics) => {
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => {
                     var entry = metrics[0];
                     emittedData = entry.Data;
                 });
