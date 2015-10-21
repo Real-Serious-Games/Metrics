@@ -74,7 +74,8 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => {
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                {
                     var entry = metrics[0];
                     emittedEntryName = entry.Name;
                 });
@@ -95,7 +96,8 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => {
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                {
                     var entry = metrics[0];
                     emittedData = entry.Data;
                 });
@@ -103,6 +105,26 @@ namespace RSG.MetricsTests
             testObject.Entry("TestEntry", content);
 
             Assert.Equal(content, emittedData);
+        }
+
+        [Fact]
+        public void entry_with_string_has_correct_type()
+        {
+            Init();
+
+            string emittedType = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedType = entry.Type;
+                });
+
+            testObject.Entry("TestEntry", "data");
+
+            Assert.Equal(typeof(string).Name, emittedType);
         }
 
         [Fact]
