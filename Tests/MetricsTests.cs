@@ -128,6 +128,30 @@ namespace RSG.MetricsTests
         }
 
         [Fact]
+        public void entry_with_string_has_correct_timestamp()
+        {
+            Init();
+
+            var timeStamp = DateTime.MinValue;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    timeStamp = entry.TimeStamp;
+                });
+
+            var timeBefore = DateTime.Now;
+
+            testObject.Entry("TestEntry", "data");
+
+            var timeAfter = DateTime.Now;
+
+            Assert.InRange(timeStamp, timeBefore, timeAfter);
+        }
+
+        [Fact]
         public void set_property_includes_property_on_first_message()
         {
             Init();

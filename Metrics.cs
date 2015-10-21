@@ -33,6 +33,7 @@ namespace RSG
             metric.Name = name;
             metric.Data = data;
             metric.Type = stringTypeName;
+            metric.TimeStamp = DateTime.Now;
 
             // Emit the entry using our emitter
             emitter.Emit(properties, new Metric[] { metric });
