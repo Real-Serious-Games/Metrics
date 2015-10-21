@@ -152,6 +152,19 @@ namespace RSG.MetricsTests
         }
 
         [Fact]
+        public void no_properties_are_included_by_default()
+        {
+            Init();
+
+            testObject.Entry("TestEvent", "data");
+
+            mockMetricsEmitter
+                .Verify(m => m.Emit(
+                    It.Is<IDictionary<string, string>>(properties => properties.Count == 0),
+                    It.IsAny<Metric[]>()));
+        }
+
+        [Fact]
         public void set_property_includes_property_on_first_message()
         {
             Init();
