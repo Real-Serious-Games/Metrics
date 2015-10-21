@@ -66,6 +66,7 @@ namespace RSG
             var metric = new Metric();
             metric.Name = name;
             metric.Type = incTypeName;
+            metric.TimeStamp = DateTime.Now;
 
             emitter.Emit(properties, new Metric[] { metric });
         }

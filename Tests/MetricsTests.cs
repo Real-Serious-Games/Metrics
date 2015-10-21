@@ -331,5 +331,29 @@ namespace RSG.MetricsTests
 
             Assert.Equal(type, emittedType);
         }
+        
+        [Fact]
+        public void inc_emits_correct_timestamp()
+        {
+            Init();
+
+            var timeStamp = DateTime.MinValue;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    timeStamp = entry.TimeStamp;
+                });
+
+            var timeBefore = DateTime.Now;
+
+            testObject.Inc("counter");
+
+            var timeAfter = DateTime.Now;
+
+            Assert.InRange(timeStamp, timeBefore, timeAfter);
+        }
     }
 }
