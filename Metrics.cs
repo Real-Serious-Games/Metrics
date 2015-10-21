@@ -15,10 +15,10 @@ namespace RSG
 
         private IDictionary<string, string> properties;
 
-        private static readonly string stringTypeName = typeof(string).Name;
-        private static readonly string intTypeName = typeof(int).Name;
-        private static readonly string floatTypeName = typeof(float).Name;
-        private static readonly string incTypeName = "inc";
+        public static readonly string stringTypeName = typeof(string).Name;
+        public static readonly string intTypeName = typeof(int).Name;
+        public static readonly string floatTypeName = typeof(float).Name;
+        public static readonly string incTypeName = "inc";
 
         public Metrics(IMetricsEmitter emitter)
         {
@@ -38,11 +38,13 @@ namespace RSG
             Argument.StringNotNullOrEmpty(() => data);
 
             // Set up the metric object
-            var metric = new Metric();
-            metric.Name = name;
-            metric.Data = data;
-            metric.Type = stringTypeName;
-            metric.TimeStamp = DateTime.Now;
+            var metric = new Metric()
+            {
+                Name = name,
+                Data = data,
+                Type = stringTypeName,
+                TimeStamp = DateTime.Now
+            };
 
             // Emit the entry using our emitter
             emitter.Emit(properties, new Metric[] { metric });
@@ -71,10 +73,12 @@ namespace RSG
         {
             Argument.StringNotNullOrEmpty(() => name);
 
-            var metric = new Metric();
-            metric.Name = name;
-            metric.Type = incTypeName;
-            metric.TimeStamp = DateTime.Now;
+            var metric = new Metric()
+            {
+                Name = name,
+                Type = incTypeName,
+                TimeStamp = DateTime.Now
+            };
 
             emitter.Emit(properties, new Metric[] { metric });
         }
@@ -84,7 +88,11 @@ namespace RSG
         /// </summary>
         public void Event(string name)
         {
-            throw new NotImplementedException();
+            Argument.StringNotNullOrEmpty(() => name);
+
+            var metric = new Metric();
+
+            emitter.Emit(properties, new Metric[] { metric });
         }
 
         /// <summary>

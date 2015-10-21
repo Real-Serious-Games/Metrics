@@ -124,7 +124,7 @@ namespace RSG.MetricsTests
 
             testObject.Entry("TestEntry", "data");
 
-            Assert.Equal(typeof(string).Name, emittedType);
+            Assert.Equal(Metrics.stringTypeName, emittedType);
         }
 
         [Fact]
@@ -163,11 +163,11 @@ namespace RSG.MetricsTests
 
             testObject.Entry("TestEntry", "data");
 
-            var properties = new Dictionary<string, string>();
-            properties.Add(propertyKey, propertyValue);
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add(propertyKey, propertyValue);
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()),
                     Times.Once());
         }
@@ -186,11 +186,11 @@ namespace RSG.MetricsTests
             testObject.Entry("TestEntry2", "data");
             testObject.Entry("TestEntry3", "data");
 
-            var properties = new Dictionary<string, string>();
-            properties.Add(propertyKey, propertyValue);
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add(propertyKey, propertyValue);
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()),
                     Times.Exactly(3));
         }
@@ -208,11 +208,11 @@ namespace RSG.MetricsTests
 
             testObject.Entry("TestEntry1", "data");
 
-            var properties1 = new Dictionary<string, string>();
-            properties1.Add(propertyKey, propertyValue1);
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add(propertyKey, propertyValue1);
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties1, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()),
                     Times.Once());
 
@@ -220,11 +220,10 @@ namespace RSG.MetricsTests
 
             testObject.Entry("TestEntry2", "data");
 
-            var properties2 = new Dictionary<string, string>();
-            properties2.Add(propertyKey, propertyValue2);
+            expectedProperties[propertyKey] = propertyValue2;
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties2, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()));
         }
 
@@ -242,11 +241,11 @@ namespace RSG.MetricsTests
 
             testObject.Entry("TestEntry1", "data");
 
-            var properties = new Dictionary<string, string>();
-            properties.Add(propertyKey1, propertyValue1);
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add(propertyKey1, propertyValue1);
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()),
                     Times.Once());
 
@@ -254,10 +253,10 @@ namespace RSG.MetricsTests
 
             testObject.Entry("TestEntry2", "data");
 
-            properties.Add(propertyKey2, propertyValue2);
+            expectedProperties.Add(propertyKey2, propertyValue2);
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()));
         }
 
@@ -268,15 +267,16 @@ namespace RSG.MetricsTests
 
             testObject.SetProperty("key1", "value");
             testObject.SetProperty("key2", "value");
+
             testObject.RemoveProperty("key1");
 
             testObject.Entry("TestEntry", "data");
 
-            var properties = new Dictionary<string, string>();
-            properties.Add("key2", "value");
+            var expectedProperties = new Dictionary<string, string>();
+            expectedProperties.Add("key2", "value");
             mockMetricsEmitter
                 .Verify(m => m.Emit(
-                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(properties, p)),
+                    It.Is<IDictionary<string, string>>(p => DictionaryEquals<string, string>(expectedProperties, p)),
                     It.IsAny<Metric[]>()));
         }
 
@@ -348,8 +348,6 @@ namespace RSG.MetricsTests
         {
             Init();
 
-            const string type = "inc";
-
             var emittedType = String.Empty;
 
             mockMetricsEmitter
@@ -362,7 +360,7 @@ namespace RSG.MetricsTests
 
             testObject.Inc("counter");
 
-            Assert.Equal(type, emittedType);
+            Assert.Equal(Metrics.incTypeName, emittedType);
         }
         
         [Fact]
