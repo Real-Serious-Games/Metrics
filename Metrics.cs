@@ -1,5 +1,4 @@
-﻿using RSG.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,8 +22,11 @@ namespace RSG
 
         public Metrics(IMetricsEmitter emitter)
         {
-            Argument.NotNull(() => emitter);
-
+            if (emitter == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
             this.emitter = emitter;
 
             properties = new Dictionary<string, string>();
@@ -35,8 +37,18 @@ namespace RSG
         /// </summary>
         public void Entry(string name, string data)
         {
-            Argument.StringNotNullOrEmpty(() => name);
-            Argument.StringNotNullOrEmpty(() => data);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
+            if (data == null)
+            {
+                throw new ArgumentNullException();
+            }
 
             // Set up the metric object
             var metric = new Metric()
@@ -56,7 +68,14 @@ namespace RSG
         /// </summary>
         public void Entry(string name, int data)
         {
-            Argument.StringNotNullOrEmpty(() => name);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
 
             var metric = new Metric()
             {
@@ -74,7 +93,14 @@ namespace RSG
         /// </summary>
         public void Entry(string name, float data)
         {
-            Argument.StringNotNullOrEmpty(() => name);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
 
             var metric = new Metric()
             {
@@ -92,7 +118,14 @@ namespace RSG
         /// </summary>
         public void Inc(string name)
         {
-            Argument.StringNotNullOrEmpty(() => name);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
 
             var metric = new Metric()
             {
@@ -109,7 +142,14 @@ namespace RSG
         /// </summary>
         public void Event(string name)
         {
-            Argument.StringNotNullOrEmpty(() => name);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
 
             var metric = new Metric()
             {
@@ -126,8 +166,22 @@ namespace RSG
         /// </summary>
         public void SetProperty(string name, string property)
         {
-            Argument.StringNotNullOrEmpty(() => name);
-            Argument.StringNotNullOrEmpty(() => property);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
+            if (property == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (property == String.Empty)
+            {
+                throw new ArgumentException();
+            }
             
             if (properties.ContainsKey(name))
             {
@@ -144,7 +198,14 @@ namespace RSG
         /// </summary>
         public void RemoveProperty(string name)
         {
-            Argument.StringNotNullOrEmpty(() => name);
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
 
             if (properties.ContainsKey(name))
             {
