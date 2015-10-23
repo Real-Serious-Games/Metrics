@@ -6,7 +6,7 @@ using System.Text;
 namespace RSG
 {
     /// <summary>
-    /// Interface for
+    /// Interface for classes that process metrics to implement.
     /// </summary>
     public interface IMetricsEmitter
     {
