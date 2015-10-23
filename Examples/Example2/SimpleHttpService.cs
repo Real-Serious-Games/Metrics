@@ -29,8 +29,15 @@ namespace Example2
             dataStream.Close();
 
             // Send the request
-            var response = request.GetResponse();
+            var response = (HttpWebResponse)request.GetResponse();
             response.Close();
+
+            // Notify if we were unsucessful
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ApplicationException("POST to " + url + " returned response code " + 
+                    (int)response.StatusCode + " " + response.StatusCode.ToString());
+            }
         }
     }
 }
