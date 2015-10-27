@@ -31,7 +31,7 @@ namespace Example1
 
             metrics.Entry("Test string entry", "foo");
 
-            Console.WriteLine("Metrics output written to otuput.csv");
+            Console.WriteLine("Metrics output written to output.csv");
         }
     }
 }
