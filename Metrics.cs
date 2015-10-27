@@ -14,6 +14,10 @@ namespace RSG
 
         private IDictionary<string, string> properties;
 
+        private List<Metric> metricQueue;
+
+        private int batchSize;
+
         public static readonly string stringTypeName = typeof(string).Name;
         public static readonly string intTypeName = typeof(int).Name;
         public static readonly string floatTypeName = typeof(float).Name;
@@ -32,8 +36,9 @@ namespace RSG
             }
             
             this.emitter = emitter;
-
-            properties = new Dictionary<string, string>();
+            this.batchSize = batchSize;
+            this.properties = new Dictionary<string, string>();
+            this.metricQueue = new List<Metric>();
         }
 
         /// <summary>
@@ -63,8 +68,7 @@ namespace RSG
                 TimeStamp = DateTime.Now
             };
 
-            // Emit the entry using our emitter
-            emitter.Emit(properties, new Metric[] { metric });
+            QueueMetric(metric);
         }
 
         /// <summary>
@@ -81,6 +85,7 @@ namespace RSG
                 throw new ArgumentException();
             }
 
+            // Set up the metric object
             var metric = new Metric()
             {
                 Name = name,
@@ -89,7 +94,7 @@ namespace RSG
                 TimeStamp = DateTime.Now
             };
 
-            emitter.Emit(properties, new Metric[] { metric });
+            QueueMetric(metric);
         }
 
         /// <summary>
@@ -106,6 +111,7 @@ namespace RSG
                 throw new ArgumentException();
             }
 
+            // Set up the metric object
             var metric = new Metric()
             {
                 Name = name,
@@ -114,7 +120,7 @@ namespace RSG
                 TimeStamp = DateTime.Now
             };
 
-            emitter.Emit(properties, new Metric[] { metric });
+            QueueMetric(metric);
         }
 
         /// <summary>
@@ -131,6 +137,7 @@ namespace RSG
                 throw new ArgumentException();
             }
 
+            // Set up the metric object
             var metric = new Metric()
             {
                 Name = name,
@@ -138,7 +145,7 @@ namespace RSG
                 TimeStamp = DateTime.Now
             };
 
-            emitter.Emit(properties, new Metric[] { metric });
+            QueueMetric(metric);
         }
 
         /// <summary>
@@ -155,6 +162,7 @@ namespace RSG
                 throw new ArgumentException();
             }
 
+            // Set up the metric object
             var metric = new Metric()
             {
                 Name = name,
@@ -162,7 +170,7 @@ namespace RSG
                 TimeStamp = DateTime.Now
             };
 
-            emitter.Emit(properties, new Metric[] { metric });
+            QueueMetric(metric);
         }
 
         /// <summary>
@@ -219,6 +227,33 @@ namespace RSG
             {
                 throw new ApplicationException("Tried to remove a non-existent property from metrics.");
             }
+        }
+
+        /// <summary>
+        /// Adds a metric to the queue.
+        /// </summary>
+        private void QueueMetric(Metric metric)
+        {
+            metricQueue.Add(metric);
+
+            if (metricQueue.Count >= batchSize)
+            {
+                FlushMeticQueue();
+            }
+        }
+
+        /// <summary>
+        /// Flushes all queued metrics. 
+        /// </summary>
+        private void FlushMeticQueue()
+        {
+            if (metricQueue.Count == 0)
+            {
+                return;
+            }
+
+            emitter.Emit(properties, metricQueue.ToArray());
+            metricQueue.Clear();
         }
     }
 }

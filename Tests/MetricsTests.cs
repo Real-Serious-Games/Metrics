@@ -81,7 +81,7 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
                 {
                     var entry = metrics[0];
                     emittedEntryName = entry.Name;
@@ -103,7 +103,7 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
                 {
                     var entry = metrics[0];
                     emittedData = entry.Data;
@@ -180,7 +180,7 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
                 {
                     var entry = metrics[0];
                     emittedEntryName = entry.Name;
@@ -202,7 +202,7 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
                 {
                     var entry = metrics[0];
                     emittedData = entry.Data;
@@ -279,7 +279,7 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
                 {
                     var entry = metrics[0];
                     emittedEntryName = entry.Name;
@@ -301,7 +301,7 @@ namespace RSG.MetricsTests
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
-                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) => 
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
                 {
                     var entry = metrics[0];
                     emittedData = entry.Data;
@@ -580,7 +580,7 @@ namespace RSG.MetricsTests
 
             Assert.Equal(Metrics.incTypeName, emittedType);
         }
-        
+
         [Fact]
         public void inc_emits_correct_timestamp()
         {
@@ -679,7 +679,7 @@ namespace RSG.MetricsTests
 
             Assert.Equal(Metrics.eventTypeName, emittedType);
         }
-        
+
         [Fact]
         public void event_emits_correct_timestamp()
         {
@@ -702,6 +702,58 @@ namespace RSG.MetricsTests
             var timeAfter = DateTime.Now;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
+        }
+
+        [Fact]
+        public void metrics_are_batched_into_correct_sizes()
+        {
+            var batchSize = 5;
+
+            InitWithBatchSize(batchSize);
+
+            var metricsBatchLength = 0;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    metricsBatchLength = metrics.Length;
+                });
+
+            for (var i = 0; i < batchSize + 1; i++)
+            {
+                testObject.Event(i.ToString());
+            }
+
+            mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+            Assert.Equal(batchSize, metricsBatchLength);
+        }
+
+        [Fact]
+        public void metrics_types_are_batched_togeather()
+        {
+            var batchSize = 5;
+
+            InitWithBatchSize(batchSize);
+
+            var metricsBatchLength = 0;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    metricsBatchLength = metrics.Length;
+                });
+
+            for (var i = 0; i < 2; i++)
+            {
+                testObject.Event(i.ToString());
+                testObject.Entry("test", i);
+                testObject.Inc(i.ToString());
+            }
+
+            mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+            Assert.Equal(batchSize, metricsBatchLength);
         }
     }
 }
