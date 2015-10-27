@@ -13,11 +13,18 @@ namespace RSG.MetricsTests
 
         Mock<IMetricsEmitter> mockMetricsEmitter;
 
-        void Init()
+        void InitWithoutBatching()
         {
             mockMetricsEmitter = new Mock<IMetricsEmitter>();
 
-            testObject = new Metrics(mockMetricsEmitter.Object);
+            testObject = new Metrics(mockMetricsEmitter.Object, 1);
+        }
+
+        void InitWithBatchSize(int batchSize)
+        {
+            mockMetricsEmitter = new Mock<IMetricsEmitter>();
+
+            testObject = new Metrics(mockMetricsEmitter.Object, batchSize);
         }
 
         /// <summary>
@@ -55,7 +62,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_string_emits_message()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.Entry("TestEntry", "Testing");
 
@@ -66,7 +73,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_string_contains_entry_name()
         {
-            Init();
+            InitWithoutBatching();
 
             const string name = "TestEntry";
 
@@ -88,7 +95,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_string_contains_string()
         {
-            Init();
+            InitWithoutBatching();
 
             const string content = "Test content";
 
@@ -110,7 +117,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_string_has_correct_type()
         {
-            Init();
+            InitWithoutBatching();
 
             string emittedType = String.Empty;
 
@@ -130,7 +137,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_string_has_correct_timestamp()
         {
-            Init();
+            InitWithoutBatching();
 
             var timeStamp = DateTime.MinValue;
 
@@ -154,7 +161,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_int_emits_message()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.Entry("TestEntry", 99);
 
@@ -165,7 +172,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_int_contains_entry_name()
         {
-            Init();
+            InitWithoutBatching();
 
             const string name = "TestEntry";
 
@@ -187,7 +194,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_int_contains_int()
         {
-            Init();
+            InitWithoutBatching();
 
             const int content = 512;
 
@@ -209,7 +216,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_int_has_correct_type()
         {
-            Init();
+            InitWithoutBatching();
 
             string emittedType = String.Empty;
 
@@ -229,7 +236,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_int_has_correct_timestamp()
         {
-            Init();
+            InitWithoutBatching();
 
             var timeStamp = DateTime.MinValue;
 
@@ -253,7 +260,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_float_emits_message()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.Entry("TestEntry", 99.5f);
 
@@ -264,7 +271,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_float_contains_entry_name()
         {
-            Init();
+            InitWithoutBatching();
 
             const string name = "TestEntry";
 
@@ -286,7 +293,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_float_contains_int()
         {
-            Init();
+            InitWithoutBatching();
 
             const float content = 12.41f;
 
@@ -308,7 +315,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_float_has_correct_type()
         {
-            Init();
+            InitWithoutBatching();
 
             string emittedType = String.Empty;
 
@@ -328,7 +335,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void entry_with_float_has_correct_timestamp()
         {
-            Init();
+            InitWithoutBatching();
 
             var timeStamp = DateTime.MinValue;
 
@@ -352,7 +359,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void no_properties_are_included_by_default()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.Entry("TestEvent", "data");
 
@@ -365,7 +372,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void set_property_includes_property_on_first_message()
         {
-            Init();
+            InitWithoutBatching();
 
             const string propertyKey = "key";
             const string propertyValue = "value";
@@ -386,7 +393,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void set_property_includes_property_on_subsequent_messages()
         {
-            Init();
+            InitWithoutBatching();
 
             const string propertyKey = "key";
             const string propertyValue = "value";
@@ -409,7 +416,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void set_property_updates_existing_property()
         {
-            Init();
+            InitWithoutBatching();
 
             const string propertyKey = "key";
             const string propertyValue1 = "value";
@@ -441,7 +448,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void set_property_appends_to_included_properties()
         {
-            Init();
+            InitWithoutBatching();
 
             const string propertyKey1 = "firstKey";
             const string propertyKey2 = "secondKey";
@@ -474,7 +481,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void remove_property_stops_including_properties_on_messages()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.SetProperty("key1", "value");
             testObject.SetProperty("key2", "value");
@@ -494,7 +501,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void remove_property_on_invalid_property_throws_exception()
         {
-            Init();
+            InitWithoutBatching();
 
             Assert.Throws<ApplicationException>(() => testObject.RemoveProperty("undefined property"));
         }
@@ -502,7 +509,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void inc_emits_metric()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.Inc("counter");
 
@@ -515,7 +522,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void inc_contains_all_properties()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.SetProperty("Property1", "foo");
             testObject.SetProperty("Property2", "bar");
@@ -535,7 +542,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void inc_emits_name()
         {
-            Init();
+            InitWithoutBatching();
 
             const string name = "Increment";
 
@@ -557,7 +564,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void inc_emits_correct_type()
         {
-            Init();
+            InitWithoutBatching();
 
             var emittedType = String.Empty;
 
@@ -577,7 +584,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void inc_emits_correct_timestamp()
         {
-            Init();
+            InitWithoutBatching();
 
             var timeStamp = DateTime.MinValue;
 
@@ -601,7 +608,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void event_emits_metric()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.Inc("counter");
 
@@ -614,7 +621,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void event_contains_all_properties()
         {
-            Init();
+            InitWithoutBatching();
 
             testObject.SetProperty("Property1", "foo");
             testObject.SetProperty("Property2", "bar");
@@ -634,7 +641,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void event_emits_name()
         {
-            Init();
+            InitWithoutBatching();
 
             const string name = "event";
 
@@ -656,7 +663,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void event_emits_correct_type()
         {
-            Init();
+            InitWithoutBatching();
 
             var emittedType = String.Empty;
 
@@ -676,7 +683,7 @@ namespace RSG.MetricsTests
         [Fact]
         public void event_emits_correct_timestamp()
         {
-            Init();
+            InitWithoutBatching();
 
             var timeStamp = DateTime.MinValue;
 

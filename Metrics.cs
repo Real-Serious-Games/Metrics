@@ -20,11 +20,15 @@ namespace RSG
         public static readonly string incTypeName = "inc";
         public static readonly string eventTypeName = "event";
 
-        public Metrics(IMetricsEmitter emitter)
+        public Metrics(IMetricsEmitter emitter, int batchSize = 1)
         {
             if (emitter == null)
             {
                 throw new ArgumentNullException();
+            }
+            if (batchSize < 1)
+            {
+                throw new ArgumentException("Batch size must be at least 1");
             }
             
             this.emitter = emitter;
