@@ -195,7 +195,7 @@ namespace RSG
                 throw new ArgumentException();
             }
 
-            FlushMeticQueue();
+            Flush();
             
             if (properties.ContainsKey(name))
             {
@@ -221,7 +221,7 @@ namespace RSG
                 throw new ArgumentException();
             }
 
-            FlushMeticQueue();
+            Flush();
 
             if (properties.ContainsKey(name))
             {
@@ -242,14 +242,14 @@ namespace RSG
 
             if (metricQueue.Count >= batchSize)
             {
-                FlushMeticQueue();
+                Flush();
             }
         }
 
         /// <summary>
         /// Flushes all queued metrics. 
         /// </summary>
-        private void FlushMeticQueue()
+        private void Flush()
         {
             if (metricQueue.Count == 0)
             {
