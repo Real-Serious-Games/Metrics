@@ -761,7 +761,7 @@ namespace RSG.MetricsTests
         {
             InitWithoutBatching();
 
-            testObject.SetProperty("test", "property");
+            testObject.Flush();
 
             mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Never());
         }

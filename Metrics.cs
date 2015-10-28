@@ -249,7 +249,7 @@ namespace RSG
         /// <summary>
         /// Flushes all queued metrics. 
         /// </summary>
-        private void Flush()
+        public void Flush()
         {
             if (metricQueue.Count == 0)
             {
