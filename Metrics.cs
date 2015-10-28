@@ -194,6 +194,8 @@ namespace RSG
             {
                 throw new ArgumentException();
             }
+
+            FlushMeticQueue();
             
             if (properties.ContainsKey(name))
             {
@@ -218,6 +220,8 @@ namespace RSG
             {
                 throw new ArgumentException();
             }
+
+            FlushMeticQueue();
 
             if (properties.ContainsKey(name))
             {

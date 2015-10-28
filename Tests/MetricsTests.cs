@@ -755,5 +755,71 @@ namespace RSG.MetricsTests
             mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
             Assert.Equal(batchSize, metricsBatchLength);
         }
+
+        [Fact]
+        public void no_metrics_are_emited_when_queue_is_empty()
+        {
+            InitWithoutBatching();
+
+            testObject.SetProperty("test", "property");
+
+            mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Never());
+        }
+
+        [Fact]
+        public void metrics_are_flushed_when_property_is_set()
+        {
+            var batchSize = 5;
+
+            InitWithBatchSize(batchSize);
+
+            var metricsBatchLength = 0;
+            var propertiesLength = 0;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    metricsBatchLength = metrics.Length;
+                    propertiesLength = properties.Count;
+                });
+
+            testObject.Event("Test");
+
+            testObject.SetProperty("test", "property");
+
+            mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+            Assert.Equal(1, metricsBatchLength);
+            Assert.Equal(0, propertiesLength);
+        }
+
+        [Fact]
+        public void metrics_are_flushed_when_property_is_removed()
+        {
+            var batchSize = 5;
+
+            InitWithBatchSize(batchSize);
+
+            var metricsBatchLength = 0;
+            var propertiesLength = 0;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    metricsBatchLength = metrics.Length;
+                    propertiesLength = properties.Count;
+                });
+
+            testObject.SetProperty("test", "property");
+
+            testObject.Event("Test");
+
+            testObject.RemoveProperty("test");
+
+            mockMetricsEmitter.Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+            Assert.Equal(1, metricsBatchLength);
+            Assert.Equal(1, propertiesLength);
+        }
     }
 }
