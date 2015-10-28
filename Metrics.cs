@@ -14,7 +14,9 @@ namespace RSG
 
         private IDictionary<string, string> properties;
 
-        private List<Metric> metricQueue;
+        private Metric[] metricQueue;
+
+        private int metricQueueIndex;
 
         private int batchSize;
 
@@ -38,7 +40,8 @@ namespace RSG
             this.emitter = emitter;
             this.batchSize = batchSize;
             this.properties = new Dictionary<string, string>();
-            this.metricQueue = new List<Metric>();
+            this.metricQueue = new Metric[batchSize];
+            this.metricQueueIndex = 0;
         }
 
         /// <summary>
@@ -238,9 +241,9 @@ namespace RSG
         /// </summary>
         private void QueueMetric(Metric metric)
         {
-            metricQueue.Add(metric);
+            metricQueue[metricQueueIndex++] = metric;
 
-            if (metricQueue.Count >= batchSize)
+            if (metricQueueIndex >= batchSize)
             {
                 Flush();
             }
@@ -251,13 +254,28 @@ namespace RSG
         /// </summary>
         public void Flush()
         {
-            if (metricQueue.Count == 0)
+            if (metricQueueIndex == 0)
             {
                 return;
             }
 
-            emitter.Emit(properties, metricQueue.ToArray());
-            metricQueue.Clear();
+            if (metricQueueIndex < batchSize)
+            {
+                var metricsToEmit = new Metric[metricQueueIndex];
+
+                for (var i = 0; i < metricQueueIndex; i++)
+                {
+                    metricsToEmit[i] = metricQueue[i];
+                }
+
+                emitter.Emit(properties, metricsToEmit);
+            }
+            else
+            {
+                emitter.Emit(properties, metricQueue);
+            }
+
+            metricQueueIndex = 0;
         }
     }
 }
