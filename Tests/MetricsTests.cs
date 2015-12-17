@@ -139,7 +139,7 @@ namespace RSG.MetricsTests
         {
             InitWithoutBatching();
 
-            var timeStamp = DateTime.MinValue;
+            var timeStamp = DateTimeOffset.MinValue;
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
@@ -149,11 +149,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.UtcNow;
+            var timeBefore = DateTimeOffset.Now;
 
             testObject.Entry("TestEntry", "data");
 
-            var timeAfter = DateTime.UtcNow;
+            var timeAfter = DateTimeOffset.Now;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -238,7 +238,7 @@ namespace RSG.MetricsTests
         {
             InitWithoutBatching();
 
-            var timeStamp = DateTime.MinValue;
+            var timeStamp = DateTimeOffset.MinValue;
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
@@ -248,11 +248,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.UtcNow;
+            var timeBefore = DateTimeOffset.Now;
 
             testObject.Entry("TestEntry", 64);
 
-            var timeAfter = DateTime.UtcNow;
+            var timeAfter = DateTimeOffset.Now;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -337,7 +337,7 @@ namespace RSG.MetricsTests
         {
             InitWithoutBatching();
 
-            var timeStamp = DateTime.MinValue;
+            var timeStamp = DateTimeOffset.MinValue;
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
@@ -347,11 +347,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.UtcNow;
+            var timeBefore = DateTimeOffset.Now;
 
             testObject.Entry("TestEntry", 64.123f);
 
-            var timeAfter = DateTime.UtcNow;
+            var timeAfter = DateTimeOffset.Now;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -586,7 +586,7 @@ namespace RSG.MetricsTests
         {
             InitWithoutBatching();
 
-            var timeStamp = DateTime.MinValue;
+            var timeStamp = DateTimeOffset.MinValue;
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
@@ -596,11 +596,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.UtcNow;
+            var timeBefore = DateTimeOffset.Now;
 
             testObject.Inc("counter");
 
-            var timeAfter = DateTime.UtcNow;
+            var timeAfter = DateTimeOffset.Now;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -685,7 +685,7 @@ namespace RSG.MetricsTests
         {
             InitWithoutBatching();
 
-            var timeStamp = DateTime.MinValue;
+            var timeStamp = DateTimeOffset.MinValue;
 
             mockMetricsEmitter
                 .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
@@ -695,11 +695,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.UtcNow;
+            var timeBefore = DateTimeOffset.Now;
 
             testObject.Event("TestEvent");
 
-            var timeAfter = DateTime.UtcNow;
+            var timeAfter = DateTimeOffset.Now;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }

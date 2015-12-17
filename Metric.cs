@@ -11,7 +11,7 @@ namespace RSG
     public struct Metric
     {
         public string Name;
-        public DateTime TimeStamp;
+        public DateTimeOffset TimeStamp;
         public string Type;
         public string Data;
     }

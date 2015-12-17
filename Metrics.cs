@@ -68,7 +68,7 @@ namespace RSG
                 Name = name,
                 Data = data,
                 Type = stringTypeName,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = DateTimeOffset.Now
             };
 
             QueueMetric(metric);
@@ -94,7 +94,7 @@ namespace RSG
                 Name = name,
                 Data = data.ToString(),
                 Type = intTypeName,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = DateTimeOffset.Now
             };
 
             QueueMetric(metric);
@@ -120,7 +120,7 @@ namespace RSG
                 Name = name,
                 Data = data.ToString(),
                 Type = floatTypeName,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = DateTimeOffset.Now
             };
 
             QueueMetric(metric);
@@ -145,7 +145,7 @@ namespace RSG
             {
                 Name = name,
                 Type = incTypeName,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = DateTimeOffset.Now
             };
 
             QueueMetric(metric);
@@ -170,7 +170,7 @@ namespace RSG
             {
                 Name = name,
                 Type = eventTypeName,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = DateTimeOffset.Now
             };
 
             QueueMetric(metric);
