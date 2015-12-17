@@ -149,11 +149,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.Now;
+            var timeBefore = DateTime.UtcNow;
 
             testObject.Entry("TestEntry", "data");
 
-            var timeAfter = DateTime.Now;
+            var timeAfter = DateTime.UtcNow;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -248,11 +248,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.Now;
+            var timeBefore = DateTime.UtcNow;
 
             testObject.Entry("TestEntry", 64);
 
-            var timeAfter = DateTime.Now;
+            var timeAfter = DateTime.UtcNow;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -347,11 +347,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.Now;
+            var timeBefore = DateTime.UtcNow;
 
             testObject.Entry("TestEntry", 64.123f);
 
-            var timeAfter = DateTime.Now;
+            var timeAfter = DateTime.UtcNow;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -596,11 +596,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.Now;
+            var timeBefore = DateTime.UtcNow;
 
             testObject.Inc("counter");
 
-            var timeAfter = DateTime.Now;
+            var timeAfter = DateTime.UtcNow;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
@@ -695,11 +695,11 @@ namespace RSG.MetricsTests
                     timeStamp = entry.TimeStamp;
                 });
 
-            var timeBefore = DateTime.Now;
+            var timeBefore = DateTime.UtcNow;
 
             testObject.Event("TestEvent");
 
-            var timeAfter = DateTime.Now;
+            var timeAfter = DateTime.UtcNow;
 
             Assert.InRange(timeStamp, timeBefore, timeAfter);
         }
