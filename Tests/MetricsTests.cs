@@ -821,5 +821,26 @@ namespace RSG.MetricsTests
             Assert.Equal(1, metricsBatchLength);
             Assert.Equal(1, propertiesLength);
         }
+
+        [Fact]
+        public void metrics_can_still_be_queued_after_emitter_throws_exception()
+        {
+            var batchSize = 5;
+
+            InitWithBatchSize(batchSize);
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Throws(new Exception());
+
+            for (var i = 0; i < batchSize - 1; i++)
+            {
+                testObject.Event("Test");
+            }
+
+            var ex = Assert.Throws<ApplicationException>(() => testObject.Event("Test"));
+
+            Assert.DoesNotThrow(() => testObject.Event("Test"));
+        }
     }
 }

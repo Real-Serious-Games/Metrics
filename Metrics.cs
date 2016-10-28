@@ -259,23 +259,32 @@ namespace RSG
                 return;
             }
 
-            if (metricQueueIndex < batchSize)
+            try
             {
-                var metricsToEmit = new Metric[metricQueueIndex];
-
-                for (var i = 0; i < metricQueueIndex; i++)
+                if (metricQueueIndex < batchSize)
                 {
-                    metricsToEmit[i] = metricQueue[i];
+                    var metricsToEmit = new Metric[metricQueueIndex];
+
+                    for (var i = 0; i < metricQueueIndex; i++)
+                    {
+                        metricsToEmit[i] = metricQueue[i];
+                    }
+
+                    emitter.Emit(properties, metricsToEmit);
                 }
-
-                emitter.Emit(properties, metricsToEmit);
+                else
+                {
+                    emitter.Emit(properties, metricQueue);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                emitter.Emit(properties, metricQueue);
+                throw new ApplicationException("Exception occurred while attempting to flush metrics", ex);
             }
-
-            metricQueueIndex = 0;
+            finally
+            {
+                metricQueueIndex = 0;
+            }
         }
     }
 }
