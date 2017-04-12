@@ -258,6 +258,105 @@ namespace RSG.MetricsTests
         }
 
         [Fact]
+        public void entry_with_long_emits_message()
+        {
+            InitWithoutBatching();
+
+            testObject.Entry("TestEntry", 99L);
+
+            mockMetricsEmitter
+                .Verify(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()), Times.Once());
+        }
+
+        [Fact]
+        public void entry_with_long_contains_entry_name()
+        {
+            InitWithoutBatching();
+
+            const string name = "TestEntry";
+
+            string emittedEntryName = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedEntryName = entry.Name;
+                });
+
+            testObject.Entry(name, 99L);
+
+            Assert.Equal(name, emittedEntryName);
+        }
+
+        [Fact]
+        public void entry_with_long_contains_long()
+        {
+            InitWithoutBatching();
+
+            const long content = 12L;
+
+            string emittedData = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedData = entry.Data;
+                });
+
+            testObject.Entry("TestEntry", content);
+
+            Assert.Equal(content.ToString(), emittedData);
+        }
+
+        [Fact]
+        public void entry_with_long_has_correct_type()
+        {
+            InitWithoutBatching();
+
+            string emittedType = String.Empty;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    emittedType = entry.Type;
+                });
+
+            testObject.Entry("TestEntry", 64L);
+
+            Assert.Equal(Metrics.longTypeName, emittedType);
+        }
+
+        [Fact]
+        public void entry_with_long_has_correct_timestamp()
+        {
+            InitWithoutBatching();
+
+            var timeStamp = DateTimeOffset.MinValue;
+
+            mockMetricsEmitter
+                .Setup(m => m.Emit(It.IsAny<IDictionary<string, string>>(), It.IsAny<Metric[]>()))
+                .Callback<IDictionary<string, string>, Metric[]>((properties, metrics) =>
+                {
+                    var entry = metrics[0];
+                    timeStamp = entry.TimeStamp;
+                });
+
+            var timeBefore = DateTimeOffset.Now;
+
+            testObject.Entry("TestEntry", 64L);
+
+            var timeAfter = DateTimeOffset.Now;
+
+            Assert.InRange(timeStamp, timeBefore, timeAfter);
+        }
+
+        [Fact]
         public void entry_with_float_emits_message()
         {
             InitWithoutBatching();
@@ -291,7 +390,7 @@ namespace RSG.MetricsTests
         }
 
         [Fact]
-        public void entry_with_float_contains_int()
+        public void entry_with_float_contains_float()
         {
             InitWithoutBatching();
 

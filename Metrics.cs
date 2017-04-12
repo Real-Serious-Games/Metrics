@@ -23,6 +23,7 @@ namespace RSG
         public static readonly string stringTypeName = typeof(string).Name;
         public static readonly string intTypeName = typeof(int).Name;
         public static readonly string floatTypeName = typeof(float).Name;
+        public static readonly string longTypeName = typeof(long).Name;
         public static readonly string incTypeName = "inc";
         public static readonly string eventTypeName = "event";
 
@@ -94,6 +95,32 @@ namespace RSG
                 Name = name,
                 Data = data.ToString(),
                 Type = intTypeName,
+                TimeStamp = DateTimeOffset.Now
+            };
+
+            QueueMetric(metric);
+        }
+
+        /// <summary>
+        /// Adds a metrics entry that is a long.
+        /// </summary>
+        public void Entry(string name, long data)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (name == String.Empty)
+            {
+                throw new ArgumentException();
+            }
+
+            // Set up the metric object
+            var metric = new Metric()
+            {
+                Name = name,
+                Data = data.ToString(),
+                Type = longTypeName,
                 TimeStamp = DateTimeOffset.Now
             };
 
