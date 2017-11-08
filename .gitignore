@@ -157,3 +157,10 @@ packages/**/*.nupkg
 packages/**/*.nuspec
 *.nupkg
 packages/
+
+# Unity example
+Examples/Unity Example/Library
+Examples/Unity Example/Temp
+
+# Vim swap file
+*.swp
