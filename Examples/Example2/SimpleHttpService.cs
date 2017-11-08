@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,7 +15,7 @@ namespace Example2
         public void Post(string url, string text)
         {
             // Convert to byte array
-            var data = Encoding.Default.GetBytes(text);
+            var data = Encoding.UTF8.GetBytes(text);
 
             // Create request
             var request = WebRequest.Create(url);
