@@ -36,7 +36,7 @@ public class Example : MonoBehaviour, IHttpService
         headers.Add("Content-Type", "application/json");
 
         // Create and send the www object.
-        WWW www = new WWW(url, Encoding.Default.GetBytes(text), headers);
+        WWW www = new WWW(url, Encoding.UTF8.GetBytes(text), headers);
         SendPost(www);
     }
 
